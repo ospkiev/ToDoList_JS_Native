@@ -5,41 +5,38 @@ let inputTitle = document.querySelector('.inputTitle');
 let inputTask = document.querySelector('.inputTask');
 let button = document.querySelector('.button');
 let list = document.querySelector('.list');
-let li = document.createElement('li');
 let deleteItem = document.createElement('span');
 deleteItem.textContent = 'delete';
-let editItem = document.createElement('span');
-editItem.textContent = 'edit';
+// let editItem = document.createElement('span');
+// editItem.textContent = 'edit';
 
 
 
 function addTask(e) {
     e.preventDefault();
 
+    let li = document.createElement('li');
+    let time = document.createElement('p');
     let title = document.createElement('h3');
     let task = document.createElement('p');
-    let time = document.createElement('p');
-    title.textContent = inputTitle.value;
-    task.textContent = inputTask.value;
 
 
-    let now = new Date().getTime();
-    let date = new Date(now);
-    time.textContent = date.toString();
-
-    list.appendChild(li);
+    list.append(li);
     li.append(title);
     li.append(task);
     li.append(time);
-    li.append(deleteItem);
-    li.append(editItem);
 
+    let now = new Date().getTime();
+    let date = new Date(now);
+    time.textContent = date.toString('');
+
+    title.textContent = inputTitle.value;
+    task.textContent = inputTask.value;
 
     let taskItem = {
         id: date,
         task: inputTask.value,
         title: inputTitle.value,
-        // delete: deleteItem,
     }
 
     let itemList = JSON.parse(localStorage.getItem('taskItem')) || [];
@@ -50,25 +47,32 @@ function addTask(e) {
     inputTask.value = '';
 }
 
-function deleteItemFromLS(e) {
-    let id = e.target;
-    console.log(id);
-}
+// function deleteItemFromLS(e) {
+//     let id = e.target;
+//     console.log(id);
+// }
 
 function getListTask() {
     let result = JSON.parse(localStorage.getItem('taskItem')) || [];
-    // li.append(deleteItem);
     console.log(result);
     result.map(el => {
+        let li = document.createElement('li');
+        let time = document.createElement('p');
+        let title = document.createElement('h3');
+        let task = document.createElement('p');
+
         list.append(li);
-        li.append(el.title);
-        li.append(el.task);
-        li.append(el.id);
-        li.append(el.delete);
+        li.append(title);
+        li.append(task);
+        li.append(time);
+
+        title.textContent = el.title;
+        task.textContent = el.task;
+        time.textContent = el.id;
     })
 }
 
 
 form.addEventListener('submit', addTask);
-window.addEventListener('click', deleteItemFromLS);
+// window.addEventListener('click', deleteItemFromLS);
 window.addEventListener('DOMContentLoaded', getListTask);
