@@ -1,0 +1,12 @@
+ul{
+    list-style: none;
+}
+
+span{
+    margin-right: 10px;
+}
+
+li{
+    background-color: aqua;
+    border: 2px solid black;
+}
