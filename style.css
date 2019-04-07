@@ -19,11 +19,11 @@ span{
 }
 
 li{
-    width: 100%;
+    width: 95%;
     height: auto;
     background-color: rgb(165, 213, 241);
     border: 0px solid black;
-    margin-bottom: 7px;
+    margin:7px 0px 7px 20px;
 }
 
 li:hover{
@@ -31,3 +31,6 @@ li:hover{
     background-color:  rgb(152, 194, 219);
 }
 
+h2,h3,p,span{
+    margin-left: 10px;
+}

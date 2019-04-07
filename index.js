@@ -69,16 +69,19 @@ function sortByTime() {
 
 function sortByTitle(e) {
     e.preventDefault();
-    let sortedArr = arrayTask.sort((a, b) => {
-        if (a.title > b.title) { return 1; }
-        else { return -1; }
+    let sortedArr = arrayTask.sort(function (a, b) {
+        if (a.title > b.title) {
+            return a.title - b.title;
+        }
+        else if (a.title < b.title) {
+            return b.title - a.title;
+        }
     }
     );
-
     arrayTask = sortedArr;
     localStorage.setItem('taskItem', JSON.stringify(arrayTask));
     console.log(arrayTask);
-    location.reload();
+    // location.reload();
 }
 
 function deleteItem(e) {
