@@ -5,6 +5,7 @@ const inputTitle = document.querySelector('.inputTitle');
 const inputTask = document.querySelector('.inputTask');
 const button = document.querySelector('.button');
 const btnSortByTime = document.querySelector('.btnSortByTime');
+const btnSortByTitle = document.querySelector('.btnSortByTitle');
 const list = document.querySelector('.list');
 const now = new Date().getTime();
 const date = new Date(now).toString('');
@@ -34,7 +35,6 @@ function card(timeParam, titleParam, taskParam, deleteParam, editParam) {
 }
 
 function addTask() {
-
     // let date = new Date().toString('');
     let date = Date.now();
 
@@ -46,33 +46,39 @@ function addTask() {
         edit: 'edit',
     }
 
-    // arrayTask.push(taskItem);
     let itemList = JSON.parse(localStorage.getItem('taskItem')) || [];
     itemList.push(taskItem);
     localStorage.setItem('taskItem', JSON.stringify(itemList));
     inputTitle.value = '';
     inputTask.value = '';
-    // renderArr();
 }
 
-function sortByTime(e) {
-    e.preventDefault();
-    let sortedArr = [];
+function sortByTime() {
+    let sortedArr = arrayTask.sort((a, b) => (a.time > b.time) ? b.time - a.time : a.time - b.time);
+    // if (b.time < a.time) {
+    //     return b.time - a.time
+    // } else {
+    //     return a.time - b.time
+    // }
+    // );
+    arrayTask = sortedArr;
+    localStorage.setItem('taskItem', JSON.stringify(arrayTask));
+    console.log(arrayTask);
+    location.reload();
+}
 
-    sortedArr = arrayTask.sort(function (a, b) {
-        if (b.time < a.time) {
-            return b.time - a.time
-        } else {
-            return a.time - b.time
-        }
-    })
+function sortByTitle(e) {
+    e.preventDefault();
+    let sortedArr = arrayTask.sort((a, b) => {
+        if (a.title > b.title) { return 1; }
+        else { return -1; }
+    }
+    );
 
     arrayTask = sortedArr;
     localStorage.setItem('taskItem', JSON.stringify(arrayTask));
     console.log(arrayTask);
     location.reload();
-    // getListTask();
-    // renderArr();
 }
 
 function deleteItem(e) {
@@ -81,13 +87,7 @@ function deleteItem(e) {
     let deletedItem = result.filter(el => el.time !== +id);
     localStorage.setItem('taskItem', JSON.stringify(deletedItem));
     location.reload();
-    // getListTask();
 }
-
-// function editItem(e) {
-//     let id = e.target;
-//     console.log(id);
-// }
 
 function getListTask() {
     let result = JSON.parse(localStorage.getItem('taskItem')) || [];
@@ -107,6 +107,7 @@ function renderArr() {
 form.addEventListener('submit', addTask);
 list.addEventListener('click', deleteItem);
 btnSortByTime.addEventListener('click', sortByTime);
+btnSortByTitle.addEventListener('click', sortByTitle)
 // window.addEventListener('click', editItem);
 window.addEventListener('DOMContentLoaded', getListTask);
 

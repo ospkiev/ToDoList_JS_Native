@@ -3,6 +3,7 @@
     padding: 0;
     font-family: Arial, Helvetica, sans-serif
 }
+
 form{
     margin-bottom: 20px;
 }
@@ -19,6 +20,7 @@ span{
 
 li{
     width: 100%;
+    height: auto;
     background-color: rgb(165, 213, 241);
     border: 0px solid black;
     margin-bottom: 7px;
@@ -28,3 +30,4 @@ li:hover{
     box-shadow: 7px 8px 25px -7px rgba(0,0,0,0.44);
     background-color:  rgb(152, 194, 219);
 }
+
