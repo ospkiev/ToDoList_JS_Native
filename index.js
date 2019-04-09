@@ -94,7 +94,6 @@ function sortByTitle() {
 function deleteFunc(e) {
     // e.preventDefault();
     let id = e.target.dataset.id;
-    console.log(id);
     let result = JSON.parse(localStorage.getItem('taskItem')) || [];
     let deletedItem = result.filter(el => el.time !== +id);
     localStorage.setItem('taskItem', JSON.stringify(deletedItem));
@@ -104,12 +103,10 @@ function deleteFunc(e) {
 function editIFunc(e) {
     // e.preventDefault();
     let key = e.target.dataset.key;
-    // console.log(key);
     let result = JSON.parse(localStorage.getItem('taskItem')) || [];
     let item = result.find(el => el.key === +key);
     inputTitle.value = item.title;
     inputTask.value = item.task;
-    // console.log(item);
 }
 
 function getListTask() {
@@ -126,9 +123,9 @@ function renderArr() {
 
 function handleFunc(e) {
     if (e.target.dataset.key !== undefined) {
-        editIFunc();
+        editIFunc(e);
     } else if (e.target.dataset.id !== undefined) {
-        deleteFunc();
+        deleteFunc(e);
     }
 }
 
@@ -136,6 +133,5 @@ window.addEventListener('DOMContentLoaded', getListTask);
 form.addEventListener('submit', addTask);
 btnSortByTime.addEventListener('click', sortByTime);
 btnSortByTitle.addEventListener('click', sortByTitle);
-// list.addEventListener('click', deleteFunc);
 list.addEventListener('click', handleFunc);
 
