@@ -7,12 +7,20 @@ const button = document.querySelector('.button');
 const btnSortByTime = document.querySelector('.btnSortByTime');
 const btnSortByTitle = document.querySelector('.btnSortByTitle');
 const list = document.querySelector('.list');
+
+// let li = document.createElement('li');
+// let title = document.createElement('h2');
+// let task = document.createElement('h3');
+// let time = document.createElement('p');
+// let deleteItem = document.createElement('span');
+// let editItem = document.createElement('span');
+
 // const now = new Date().getTime();
 // const date = new Date(now).toString('');
 let arrayTask = [];
-let flag = {
-    flag: true,
-}
+// let flag = true;      // !!!!!!!!!!
+// console.log(flag);
+// localStorage.setItem('flag', true);
 
 function card(timeParam, titleParam, taskParam, deleteParam, editParam) {
 
@@ -21,8 +29,9 @@ function card(timeParam, titleParam, taskParam, deleteParam, editParam) {
     let task = document.createElement('h3');
     let time = document.createElement('p');
     let deleteItem = document.createElement('span');
-    deleteItem.setAttribute('data-id', timeParam)
+    deleteItem.setAttribute('data-id', timeParam);
     let editItem = document.createElement('span');
+    editItem.setAttribute('data-id', +timeParam + 10);
 
     list.append(li);
     li.append(title);
@@ -46,6 +55,7 @@ function addTask() {
         time: date,
         delete: 'delete',
         edit: 'edit',
+        key: +date + 10,
     }
 
     let itemList = JSON.parse(localStorage.getItem('taskItem')) || [];
@@ -56,7 +66,7 @@ function addTask() {
     inputTask.value = '';
 }
 
-function sortByTime() {
+function sortByTime() { // не корректно сортирует , надо разворачивать массив , а потом сортировать и обратно в Локал !!!!!!
     arrayTask.sort((a, b) => (a.time > b.time) ? b.time - a.time : a.time - b.time);
     // if (b.time < a.time) {
     //     return b.time - a.time
@@ -68,36 +78,49 @@ function sortByTime() {
     location.reload();
 }
 
-function sortByTitle() {
-
+function sortByTitle(e) {
+    e.preventDefault();
+    let flag = localStorage.getItem('flag');
+    console.log(flag);
     function compare(a, b) {
-        if (a.title > b.title) {
+        if (a.title < b.title) {
             return 1;
         } else {
             return -1;
         }
     }
-    if (flag.flag === true) {
+    if (flag === 'true') {
         let sorted = arrayTask.sort(compare);
         localStorage.setItem('taskItem', JSON.stringify(sorted));
-        // arrayTask = sorted;
-        flag.flag = false;
+        localStorage.setItem('flag', false);
     } else {
         let sorted = arrayTask.sort(compare).reverse();
         localStorage.setItem('taskItem', JSON.stringify(sorted));
-        // arrayTask = sorted;
-        flag.flag = true;
+        localStorage.setItem('flag', true);
     }
-    // console.log(arrayTask);
-    setTimeout(() => location.reload(), 1000);
+    location.reload();
 }
 
-function deleteItem(e) {
+function deleteFunc(e) {
+    // e.preventDefault();
     let id = e.target.dataset.id;
+    // console.log(id);
     let result = JSON.parse(localStorage.getItem('taskItem')) || [];
     let deletedItem = result.filter(el => el.time !== +id);
     localStorage.setItem('taskItem', JSON.stringify(deletedItem));
-    location.reload();
+    // location.reload();
+}
+
+function editIFunc(e) {
+    // e.preventDefault();
+    let key = e.target.dataset.id;
+    let result = JSON.parse(localStorage.getItem('taskItem')) || [];
+    let item = result.find(el => el.key === +key);
+    inputTitle.value = item.title;
+    inputTask.value = item.task;
+    // console.log(item);
+    item.title = inputTitle.value;
+    item.task = inputTask.value;
 }
 
 function getListTask() {
@@ -107,7 +130,6 @@ function getListTask() {
 }
 
 function renderArr() {
-    // location.reload();
     arrayTask.map(el =>
         card(el.time, el.title, el.task, el.delete, el.edit)
     );
@@ -115,8 +137,8 @@ function renderArr() {
 
 window.addEventListener('DOMContentLoaded', getListTask);
 form.addEventListener('submit', addTask);
-list.addEventListener('click', deleteItem);
 btnSortByTime.addEventListener('click', sortByTime);
 btnSortByTitle.addEventListener('click', sortByTitle);
-// window.addEventListener('click', editItem);
+list.addEventListener('click', deleteFunc);
+list.addEventListener('click', editIFunc);
 
