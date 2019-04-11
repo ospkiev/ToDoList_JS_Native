@@ -9,10 +9,12 @@ input{
 
 button{
     background-color: rgb(136, 213, 236);
+    margin-left: 10px;
 }
 
 form{
     margin-bottom: 20px;
+    margin-left: 20px;
 }
 
 ul{
