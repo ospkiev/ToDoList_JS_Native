@@ -62,19 +62,39 @@ function addTask() {
 
 function sortByTime() {
     let result = JSON.parse(localStorage.getItem('taskItem')) || [];
-    arrayTask = result;
-    arrayTask.sort((a, b) => (a.time > b.time) ? b.time - a.time : a.time - b.time);
+    // arrayTask = result;
+    // arrayTask.sort((a, b) => (a.time > b.time) ? b.time - a.time : a.time - b.time);
     // if (b.time < a.time) {
     //     return b.time - a.time
     // } else {
     //     return a.time - b.time
     // }
     // );
-    localStorage.setItem('taskItem', JSON.stringify(arrayTask));
+    arrayTask = result;
+    let flag = localStorage.getItem('flag');
+    function compare(a, b) {
+        if (a.time < b.time) {
+            return 1;
+        } else {
+            return -1;
+        }
+    }
+
+    if (flag === 'true') {
+        let sorted = arrayTask.sort(compare);
+        localStorage.setItem('taskItem', JSON.stringify(sorted));
+        localStorage.setItem('flag', false);
+    } else {
+        let sorted = arrayTask.sort(compare).reverse();
+        localStorage.setItem('taskItem', JSON.stringify(sorted));
+        localStorage.setItem('flag', true);
+    }
     location.reload();
 }
 
 function sortByTitle() {
+    let result = JSON.parse(localStorage.getItem('taskItem')) || [];
+    arrayTask = result;
     // e.preventDefault();
     let flag = localStorage.getItem('flag');
     function compare(a, b) {
