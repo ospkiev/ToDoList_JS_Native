@@ -3,6 +3,13 @@
     padding: 0;
     font-family: Arial, Helvetica, sans-serif
 }
+input{
+    width: 30%;
+}
+
+button{
+    background-color: rgb(136, 213, 236);
+}
 
 form{
     margin-bottom: 20px;
@@ -33,4 +40,5 @@ li:hover{
 
 h2,h3,p,span{
     margin-left: 10px;
+    word-wrap: break-word;
 }

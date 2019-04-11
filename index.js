@@ -1,6 +1,7 @@
 'use strict'
 
 const form = document.querySelector('.form');
+const buttonEdit = document.querySelector('.button_edit');
 const inputTitle = document.querySelector('.inputTitle');
 const inputTask = document.querySelector('.inputTask');
 const button = document.querySelector('.button');
@@ -10,21 +11,24 @@ const list = document.querySelector('.list');
 
 let arrayTask = [];
 
-function card(timeParam, titleParam, taskParam, deleteParam, editParam) {
+function card(timeParam, titleParam, taskParam, deleteParam, editParam, editedParam) {
 
     let li = document.createElement('li');
     let title = document.createElement('h2');
     let task = document.createElement('h3');
     let time = document.createElement('p');
-    let deleteItem = document.createElement('span');
+    let deleteItem = document.createElement('button');
     deleteItem.setAttribute('data-id', timeParam);
-    let editItem = document.createElement('span');
+    let editItem = document.createElement('button');
     editItem.setAttribute('data-key', +timeParam + 10);
+    let edited = document.createElement('p');
+    edited.style.color = 'red';
 
     list.append(li);
     li.append(title);
     li.append(task);
     li.append(time);
+    li.append(edited);
     li.append(editItem);
     li.append(deleteItem);
     time.textContent = `${new Date(timeParam).toLocaleDateString("en-US")} ${new Date(timeParam).toLocaleTimeString("en-US")}`;
@@ -32,6 +36,7 @@ function card(timeParam, titleParam, taskParam, deleteParam, editParam) {
     task.textContent = taskParam;
     deleteItem.textContent = deleteParam;
     editItem.textContent = editParam;
+    edited.textContent = editedParam;
 }
 
 function addTask() {
@@ -44,6 +49,7 @@ function addTask() {
         delete: 'delete',
         edit: 'edit',
         key: +date + 10,
+        edited: '',
     }
 
     let itemList = JSON.parse(localStorage.getItem('taskItem')) || [];
@@ -54,7 +60,7 @@ function addTask() {
     inputTask.value = '';
 }
 
-function sortByTime() { // не корректно сортирует , надо разворачивать массив , а потом сортировать и обратно в Локал !!!!!!
+function sortByTime() {
     let result = JSON.parse(localStorage.getItem('taskItem')) || [];
     arrayTask = result;
     arrayTask.sort((a, b) => (a.time > b.time) ? b.time - a.time : a.time - b.time);
@@ -100,13 +106,17 @@ function deleteFunc(e) {
     location.reload();
 }
 
-function editIFunc(e) {
+function editDetectItem(e, callback) {
     // e.preventDefault();
     let key = e.target.dataset.key;
     let result = JSON.parse(localStorage.getItem('taskItem')) || [];
     let item = result.find(el => el.key === +key);
     inputTitle.value = item.title;
     inputTask.value = item.task;
+    localStorage.setItem('editKey', JSON.stringify(item.key));
+
+    // localStorage.setItem('taskItem', JSON.stringify(item));
+    // console.log(item);
 }
 
 function getListTask() {
@@ -117,16 +127,29 @@ function getListTask() {
 
 function renderArr() {
     arrayTask.map(el =>
-        card(el.time, el.title, el.task, el.delete, el.edit)
+        card(el.time, el.title, el.task, el.delete, el.edit, el.edited)
     );
 }
 
 function handleFunc(e) {
     if (e.target.dataset.key !== undefined) {
-        editIFunc(e);
+        editDetectItem(e);
     } else if (e.target.dataset.id !== undefined) {
         deleteFunc(e);
     }
+}
+
+function editFunc(e) {
+    e.preventDefault();
+    let editKey = JSON.parse(localStorage.getItem('editKey'));
+    let result = JSON.parse(localStorage.getItem('taskItem')) || [];
+    console.log(result);
+    let item = result.find(el => el.key === +editKey);
+    item.title = inputTitle.value;
+    item.task = inputTask.value;
+    item.edited = 'edited';
+    localStorage.setItem('taskItem', JSON.stringify(result));
+    location.reload();
 }
 
 window.addEventListener('DOMContentLoaded', getListTask);
@@ -134,4 +157,5 @@ form.addEventListener('submit', addTask);
 btnSortByTime.addEventListener('click', sortByTime);
 btnSortByTitle.addEventListener('click', sortByTitle);
 list.addEventListener('click', handleFunc);
+buttonEdit.addEventListener('click', editFunc);
 
